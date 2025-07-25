@@ -33,18 +33,28 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const customTabs = tabs.filter((tab) => !DEFAULT_TABS.includes(tab));
-    localStorage.setItem(STORAGE_KEY_TABS, JSON.stringify(customTabs));
-    localStorage.setItem(STORAGE_KEY_ACTIVE, activeTab);
-  }, [tabs, activeTab]);
-
-  useEffect(() => {
     if (!activeTab) return;
 
-    fetch(`https://takehome-backend.vercel.app/api/company/${activeTab}`)
-      .then((res) => res.json())
-      .then((res) => setFetchedData(res.data))
-      .catch(() => setFetchedData(null));
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/company/${activeTab}`;
+    console.log("Fetching:", url);
+
+    fetch(url, {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    })
+      .then((res) => {
+        console.log("Status:", res.status);
+        return res.json();
+      })
+      .then((res) => {
+        console.log("Response JSON:", res);
+        setFetchedData(res.data);
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setFetchedData(null);
+      });
   }, [activeTab]);
 
   return (

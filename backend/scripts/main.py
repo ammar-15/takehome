@@ -6,7 +6,11 @@ from .parser import parsed_pdf
 from .structure import save_to_db, load_from_db
 import os
 import json
+from dotenv import load_dotenv
 
+load_dotenv()
+
+API_BASE_URL = os.getenv("API_BASE_URL")
 PDF_DIR = os.path.join(os.path.dirname(__file__), "../pdfs")
 COMPANY_TABLE_PATH = os.path.join(os.path.dirname(__file__), "../company_table.json")
 
@@ -14,7 +18,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://takehome-rho.vercel.app"],
+    allow_origins=[
+        "http://localhost:5172",
+        "https://takehome-rho.vercel.app"
+        ],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type", "Authorization"],
