@@ -7,6 +7,10 @@ from typing import Dict
 DB_PATH = os.path.join(os.path.dirname(__file__), "../data.sqlite")
 
 def ensure_tables(cursor):
+    """
+    Ensures that the necessary SQLite tables (CompanyMetadata, Company) exist.
+    Creates them if they do not already exist.
+    """
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS CompanyMetadata (
             ticker TEXT PRIMARY KEY,
@@ -32,12 +36,20 @@ def ensure_tables(cursor):
     """)
 
 def clean_value(value):
+    """
+    Cleans and converts a financial value to a float.
+    Removes currency symbols and commas, handles non-numeric values.
+    """
     try:
         return float(str(value).replace(",", "").replace("$", "").replace("€", "").strip())
     except ValueError:
         return None
 
 def save_to_db(company_name: str, structured_data: Dict):
+    """
+    Saves structured financial data to the SQLite database.
+    Handles metadata and financial metrics, ensuring no duplicate entries.
+    """
     ticker = structured_data.get("ticker")
     ir_url = structured_data.get("ir_url")
     data = structured_data.get("data", {})
@@ -97,6 +109,10 @@ def save_to_db(company_name: str, structured_data: Dict):
     print(f"[DB] Data saved for {company_name} ({ticker})")
 
 def load_from_db(ticker: str) -> dict:
+    """
+    Loads structured financial data for a given ticker from the database.
+    Returns data organized by statement type and year.
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

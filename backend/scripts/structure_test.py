@@ -17,6 +17,10 @@ REFERENCE_METRICS_PATH = os.path.join(os.path.dirname(__file__), "../parsed_json
 
 
 def clean_value(value):
+    """
+    Cleans and converts a financial value to a float.
+    Removes currency symbols and commas, handles non-numeric values.
+    """
     try:
         return float(str(value).replace(",", "").replace("$", "").replace("€", "").strip())
     except ValueError:
@@ -24,6 +28,10 @@ def clean_value(value):
 
 
 def ensure_tables(cursor):
+    """
+    Ensures that the necessary SQLite tables (CompanyMetadata, Company) exist.
+    Creates them if they do not already exist.
+    """
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS CompanyMetadata (
             ticker TEXT PRIMARY KEY,
@@ -53,11 +61,19 @@ PARSED_JSON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../pa
 
 
 def load_all_json_files(folder_path: str):
+    """
+    Loads all JSON files from a specified folder path.
+    Returns a list of parsed JSON objects.
+    """
     files = Path(folder_path).glob("*.json")
     return [json.load(open(file, "r")) for file in files if file.name.endswith(".json")]
 
 
 def detect_filing_year(data: dict) -> int:
+    """
+    Detects the filing year from the parsed financial data.
+    Searches for year patterns within the data sections.
+    """
     years = set()
     for section in ["Income Statement", "Balance Sheet", "Cash Flow Statement"]:
         for k in data.get(section, {}).keys():
@@ -68,6 +84,10 @@ def detect_filing_year(data: dict) -> int:
 
 
 def openai_deduplicate_2024(rows_2024, filing_year: int):
+    """
+    Uses OpenAI to deduplicate and normalize financial line items for the 2024 report.
+    Returns a cleaned JSON object with standardized metrics.
+    """
     system_prompt = f"""You are a financial data cleaning assistant. You will receive a JSON object containing Income Statement, Balance Sheet, and Cash Flow Statement line items for the year {filing_year}.
 
 Your job is to:
@@ -101,6 +121,10 @@ Output valid JSON only. No explanations, no markdown.
 
 
 def check_existing_in_db(ticker: str, year: int, statement_type: str, metric: str):
+    """
+    Checks if a specific financial metric for a company and year already exists in the database.
+    Prevents duplicate entries.
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     ensure_tables(cursor)
@@ -116,6 +140,10 @@ def check_existing_in_db(ticker: str, year: int, statement_type: str, metric: st
 
 
 def safe_save_to_db(company_name: str, ticker: str, ir_url: str, filing_year: int, structured_data: dict):
+    """
+    Saves structured financial data to the SQLite database.
+    Handles metadata and financial metrics, ensuring no duplicate entries.
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     ensure_tables(cursor)
@@ -163,6 +191,10 @@ def safe_save_to_db(company_name: str, ticker: str, ir_url: str, filing_year: in
 
 
 def process_all():
+    """
+    Main function to process all parsed JSON files.
+    Handles 2024 reports first for reference key generation, then other years.
+    """
     print("[🚀 Starting structure_test.py...]")
     files = sorted(Path(PARSED_JSON_DIR).glob("*.json"))
     print(f"[Loaded files from: {PARSED_JSON_DIR}]")
@@ -249,6 +281,10 @@ def process_all():
         }
 
         def match_metric(ref_metric: str, available_metrics: dict) -> str:
+    """
+    Finds the best matching metric from available metrics based on a reference metric.
+    Uses difflib for fuzzy matching.
+    """
             keys = list(available_metrics.keys())
             for k in keys:
                 if k.lower().strip() == ref_metric.lower().strip():

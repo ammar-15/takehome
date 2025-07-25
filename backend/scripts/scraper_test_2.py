@@ -16,15 +16,27 @@ os.makedirs(PDF_FOLDER, exist_ok=True)
 TOTAL_TOKENS = 0
 
 def estimate_tokens(msg):
+    """
+    Estimates the number of tokens in a given message.
+    Used for tracking OpenAI API token usage.
+    """
     return len(msg) // 4
 
 def extract_first_url(text):
+    """
+    Extracts the first URL found in a given text string.
+    Uses a regular expression to find HTTP or HTTPS links.
+    """
     match = re.search(r"https?://[^\s)\]]+", text)
     return match.group(0) if match else ""
 
 #  AI prompt
 
 def ai_prompt(prompt):
+    """
+    Sends a prompt to the OpenAI API and returns the AI's response.
+    Tracks total token usage for API calls.
+    """
     global TOTAL_TOKENS
     TOTAL_TOKENS += estimate_tokens(prompt)
     print(f"\n[ AI PROMPT]\n{prompt[:300]}...")
@@ -37,6 +49,10 @@ def ai_prompt(prompt):
 #  AI chooses best next link
 
 def ai_pick_best_link(current_url, links, page_text, year="2024"):
+    """
+    Uses AI to select the best link from a list to navigate towards an annual report PDF.
+    Considers the current URL, available links, and page text.
+    """
     prompt = f"""You are helping locate the official annual report PDF for the year {year}.
 Only choose annual reports, not quarterly.
 
@@ -52,6 +68,10 @@ Which link is the best next step? Only return one full URL."""
 # Load and parse page with Playwright
 
 def scan_page(url):
+    """
+    Loads a web page using Playwright and extracts all links and visible text.
+    Includes fallbacks for sitemap and search functionality.
+    """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -121,6 +141,10 @@ def scan_page(url):
 #  download pdf
 
 def download_pdf(url, year=None, ticker="UNKNOWN"):
+    """
+    Downloads a PDF from the given URL and saves it to the PDF_FOLDER.
+    Handles existing files, invalid PDF content, and download errors.
+    """
     ticker = ticker.upper()
     year = str(year) if year else "unknown"
     fname = f"{ticker}_{year}.pdf"
@@ -152,6 +176,10 @@ def download_pdf(url, year=None, ticker="UNKNOWN"):
 #  Recursively use AI to navigate
 
 def recursive_ai_nav(start_url, year="2024", ticker="UNKNOWN", depth=0, visited=None):
+    """
+    Recursively navigates web pages using AI to find and download annual report PDFs.
+    Explores links until a PDF is found or max depth is reached.
+    """
     if visited is None:
         visited = set()
     if depth > 8:
@@ -184,6 +212,9 @@ def recursive_ai_nav(start_url, year="2024", ticker="UNKNOWN", depth=0, visited=
 # Try previous years using pattern match
 
 def try_other_years(base_url_2024, ticker, from_year=2023):
+    """
+    Attempts to find and download annual reports for previous years based on the 2024 URL pattern.
+    """
     for y in range(from_year, 2014, -1):
         guess_url = re.sub(r"20\d{2}", str(y), base_url_2024)
         print(f"[TRY] {guess_url}")
@@ -192,12 +223,19 @@ def try_other_years(base_url_2024, ticker, from_year=2023):
 #  Get IR URL using AI
 
 def find_ir_url_via_ai(ticker):
+    """
+    Uses AI to find the official investor relations (IR) URL for a given company ticker.
+    """
     prompt = f"""Find the official investor relations or annual reports page for European company '{ticker}'. Return the best direct URL."""
     return ai_prompt(prompt)
 
 # Main
 
 def scrapeticker(ticker):
+    """
+    Main function to orchestrate the scraping of 10-year annual reports for a given ticker.
+    Starts by finding the IR URL and then recursively navigates to find PDFs.
+    """
     print(f"\n🔍 Scraping 10-year annual reports for: {ticker}")
     start_url = extract_first_url(find_ir_url_via_ai(ticker))
     print(f"[IR URL] {start_url}")

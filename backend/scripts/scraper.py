@@ -10,6 +10,10 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 PDF_FOLDER = os.path.join(os.path.dirname(__file__), "../pdfs")
 
 def find_ir_url(ticker: str) -> str:
+    """
+    Finds the Investor Relations (IR) URL for a given company ticker using OpenAI.
+    Sends a prompt to OpenAI and extracts the URL from the response.
+    """
     prompt = f"Return the official investor relations website URL of the European company with ticker '{ticker}' in plain text only (no formatting)."
     response = openai.ChatCompletion.create(
     model="gpt-4o",
@@ -22,12 +26,20 @@ def find_ir_url(ticker: str) -> str:
     return content.strip()
 
 def download_pdf(pdf_url: str, file_path: str):
+    """
+    Downloads a PDF from the specified URL and saves it to the given file path.
+    Raises an exception if the download fails.
+    """
     response = requests.get(pdf_url)
     response.raise_for_status()
     with open(file_path, "wb") as f:
         f.write(response.content)
 
 def scrape_pdf(ticker: str):
+    """
+    Scrapes the Investor Relations page for a given ticker to find and download the 2024 annual report PDF.
+    Uses Playwright to navigate the web page and identify PDF links.
+    """
     ir_url = find_ir_url(ticker)
     company_name = ir_url.split("//")[-1].split(".")[0]
     print(f"[SCRAPER] Visiting: {ir_url}")

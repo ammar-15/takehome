@@ -41,13 +41,25 @@ TABLE_SECTION_HEADERS = [
 
 
 def get_pdf_year(pdf_path: str) -> int:
+    """
+    Extracts the year from the PDF filename.
+    Assumes the year is a four-digit number in the filename.
+    """
     match = re.search(r"(\d{4})", os.path.basename(pdf_path))
     return int(match.group(1)) if match else 2024  # fallback
 
 def has_numbers(text: str) -> bool:
+    """
+    Checks if the given text contains numbers or currency symbols.
+    Used to identify lines with potential financial data.
+    """
     return bool(re.search(r"\$?\(?[\d,]+(?:\.\d+)?\)?", text)) or "€" in text or "million" in text.lower()
 
 def is_relevant_financial_table(text: str) -> bool:
+    """
+    Determines if a given text block is likely a relevant financial table.
+    Checks for a minimum number of numeric lines, signal phrases, and section headers.
+    """
     text_lower = text.lower()
     numeric_lines = sum(1 for line in text.split("\n") if has_numbers(line))
     return (
@@ -57,6 +69,10 @@ def is_relevant_financial_table(text: str) -> bool:
     )
 
 def strong_structural_signal_adjusted(text: str) -> bool:
+    """
+    Analyzes text for strong structural signals indicating a well-formed financial table.
+    Looks for numeric rows, signal phrases, year hits, header hits, and consistent columns.
+    """
     lines = text.lower().split("\n")
 
     numeric_rows = sum(1 for line in lines if has_numbers(line))
@@ -78,10 +94,18 @@ def strong_structural_signal_adjusted(text: str) -> bool:
     )
 
 def get_page_text(pdf_path: str, page_num: int) -> str:
+    """
+    Extracts plain text content from a specific page of a PDF document.
+    Uses PyMuPDF (fitz) for text extraction.
+    """
     with fitz.open(pdf_path) as doc:
         return doc[page_num].get_text("text")  # type: ignore
 
 def extract_text_with_pdfplumber(pdf_path: str, pages: List[int]) -> str:
+    """
+    Extracts and merges text content from specified pages of a PDF using pdfplumber.
+    Useful for more precise text extraction from tables.
+    """
     merged_text = ""
     with pdfplumber.open(pdf_path) as pdf:
         for p in pages:
@@ -92,6 +116,10 @@ def extract_text_with_pdfplumber(pdf_path: str, pages: List[int]) -> str:
     return merged_text.strip()
 
 def safe_parse_json(content: str) -> Dict:
+    """
+    Safely parses a JSON string, handling common formatting issues from AI responses.
+    Extracts the JSON object from within code blocks if present.
+    """
     try:
         if content.startswith("```json"):
             content = content.replace("```json", "").replace("```", "").strip()
@@ -105,6 +133,10 @@ def safe_parse_json(content: str) -> Dict:
         return {}
 
 def ask_openai_batch(text: str, page_ids: List[int], current_year: int) -> Tuple[Dict, Dict]:
+    """
+    Sends a batch of text from PDF pages to OpenAI for financial data extraction.
+    Focuses on extracting data for the current year and categorizing historical data.
+    """
     print(f"  🧠 GPT validating pages {', '.join(str(p+1) for p in page_ids)}")
 
     try:
@@ -162,6 +194,10 @@ Text:
         return {}, {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
     
 def ask_openai_for_known_keys(text: str, page_ids: List[int], year: int, keymap: Dict[str, List[str]]) -> Tuple[Dict, Dict]:
+    """
+    Asks OpenAI to extract values for a predefined set of financial keys from text.
+    Used for consistent extraction once key structures are known.
+    """
     print(f"  🧠 GPT extracting known keys for {year} from pages {', '.join(str(p+1) for p in page_ids)}")
 
     prompt_sections = []

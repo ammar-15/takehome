@@ -77,6 +77,16 @@ def save_company_info(company_name, ticker, ir_url):
     with open(COMPANY_TABLE_PATH, 'w') as f:
         json.dump(data, f, indent=2)
 
+@app.get("/metadata/{ticker}")
+def get_metadata(ticker: str):
+    """
+    Retrieves metadata for a given company ticker.
+    Returns company name, ticker, and investor relations URL if found.
+    """
+    data = get_company_info(ticker)
+    if data:
+        return data
+    return {"error": f"Metadata for ticker '{ticker}' not found."}
 
 def get_company_info(ticker):
     """
