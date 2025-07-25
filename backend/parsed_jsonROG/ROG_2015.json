@@ -1,0 +1,53 @@
+{
+  "ticker": "ROG",
+  "year": 2016,
+  "name": "ROG",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Total net sales": "50,576",
+      "Cost of sales": "19,507",
+      "Gross profit": "31,069",
+      "Marketing and distribution": "10,232",
+      "Research and development": "9,920",
+      "General and administration": "2,392",
+      "Operating profit": "8,525",
+      "Other income (expense)": "259",
+      "Income before taxes": "8,784",
+      "Income taxes": "-1,599",
+      "Net income": "7,185",
+      "Earnings per share (basic)": "8.41",
+      "Earnings per share (diluted)": "8.29"
+    },
+    "Balance Sheet": {
+      "Cash and cash equivalents": "13,968",
+      "Accounts receivable": "10,066",
+      "Inventories": "5,027",
+      "Other current assets": "4,235",
+      "Total current assets": "33,296",
+      "Property, plant and equipment": "14,837",
+      "Intangible assets": "11,624",
+      "Other non-current assets": "4,776",
+      "Total non-current assets": "31,237",
+      "Total assets": "64,533",
+      "Current liabilities": "14,657",
+      "Long-term debt": "4,007",
+      "Other non-current liabilities": "9,196",
+      "Total liabilities": "27,860",
+      "Total equity": "36,673"
+    },
+    "Cash Flow Statement": {
+      "Cash flows from operating activities": "13,790",
+      "Cash flows from investing activities": "-4,633",
+      "Cash flows from financing activities": "-9,418",
+      "Free cash flow": "9,157",
+      "Net increase in cash": "-261",
+      "Cash at beginning of year": "14,229",
+      "Cash at end of year": "13,968",
+      "Depreciation and amortization": "3,682",
+      "Capital expenditure (PP&E)": "-2,935",
+      "Intangible asset purchases": "-772"
+    }
+  },
+  "tokens_used": 178284
+}

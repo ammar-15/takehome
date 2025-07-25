@@ -1,0 +1,49 @@
+{
+  "ticker": "ROG",
+  "year": 2024,
+  "name": "Roche Holding AG",
+  "ir_url": "https://www.roche.com/investors/reports/annual-reports",
+  "data": {
+    "Income Statement": {
+      "Sales": "58,739",
+      "Cost of sales": "-20,897",
+      "Gross profit": "37,842",
+      "Marketing and distribution": "-9,802",
+      "Research and development": "-13,034",
+      "General and administration": "-4,145",
+      "Operating profit": "10,861",
+      "Financing costs": "-909",
+      "Other financial income (expense)": "194",
+      "Profit before taxes": "10,146",
+      "Income taxes": "-1,857",
+      "Net income": "8,289",
+      "Attributable to Roche shareholders": "7,648",
+      "Attributable to non-controlling interests": "641",
+      "Basic EPS (CHF)": "9.04",
+      "Diluted EPS (CHF)": "9.01"
+    },
+    "Balance Sheet": {
+      "Total non-current assets": "55,495",
+      "Total current assets": "38,616",
+      "Total assets": "94,111",
+      "Equity attributable to Roche shareholders": "24,510",
+      "Non-controlling interests": "1,525",
+      "Total equity": "26,035",
+      "Total non-current liabilities": "30,160",
+      "Total current liabilities": "37,916",
+      "Total liabilities": "68,076",
+      "Total equity and liabilities": "94,111"
+    },
+    "Cash Flow Statement": {
+      "Cash flows from operating activities": "17,475",
+      "Cash flows from investing activities": "-5,204",
+      "Cash flows from financing activities": "-11,393",
+      "Net effect of currency translation": "-72",
+      "Increase (decrease) in cash": "806",
+      "Cash at beginning of year": "5,412",
+      "Cash at end of year": "6,218",
+      "Free cash flow": "13,041"
+    }
+  },
+  "tokens_used": 123478
+}

@@ -1,0 +1,63 @@
+{
+  "ticker": "ROG",
+  "year": 2020,
+  "name": "ROG",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Total net sales": "13,978",
+      "Net system sales": "10,342",
+      "Net service and field option sales": "3,636",
+      "Total cost of sales": "5,818",
+      "Cost of system sales": "4,170",
+      "Cost of service and field option sales": "1,648",
+      "Gross profit": "8,160",
+      "Research and development (R&D) costs": "2,216",
+      "Selling, general and administrative (SG&A) costs": "929",
+      "Income from operations": "5,015",
+      "Interest and other, net": "116",
+      "Income before income taxes": "5,131",
+      "Income tax expense": "(849)",
+      "Income after income taxes": "4,282",
+      "Profit from equity method investments": "116",
+      "Net income": "4,398",
+      "Wages and salaries": "3,146",
+      "Social security expenses": "326",
+      "Pension and retirement expenses": "240",
+      "Share-based payments": "118",
+      "Personnel expenses": "3,830"
+    },
+    "Balance Sheet": {
+      "Total current assets": "17,470",
+      "Total non-current assets": "11,175",
+      "Total assets": "28,645",
+      "Total current liabilities": "8,107",
+      "Total non-current liabilities": "4,417",
+      "Total liabilities": "12,524",
+      "Total shareholders’ equity": "16,121",
+      "Cash and cash equivalents": "4,626",
+      "Inventories, net": "4,732",
+      "Accounts receivable, net": "3,764",
+      "Finance receivables, net": "284",
+      "Goodwill": "2,226",
+      "Property, plant and equipment, net": "4,592"
+    },
+    "Cash Flow Statement": {
+      "Net cash provided by (used in) operating activities": "5,852",
+      "Net cash provided by (used in) investing activities": "(967)",
+      "Net cash provided by (used in) financing activities": "(2,661)",
+      "Effect of changes in exchange rates on cash": "(98)",
+      "Net increase (decrease) in cash and cash equivalents": "2,126",
+      "Cash and cash equivalents, end of period": "4,626",
+      "Free cash flow": "4,632",
+      "Purchases of property, plant and equipment and intangible assets": "(1,220)",
+      "Depreciation and amortization": "692",
+      "Share-based compensation expense": "118",
+      "Accounts payable": "748",
+      "Accrued and other liabilities": "293",
+      "Inventories": "-1,037",
+      "Accounts receivable, net": "-73"
+    }
+  },
+  "tokens_used": 153792
+}

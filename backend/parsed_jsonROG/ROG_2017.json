@@ -1,0 +1,40 @@
+{
+  "ticker": "ROG",
+  "year": 2017,
+  "name": "ROG",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Sales": "53,299",
+      "Cost of sales": "-18,360",
+      "Marketing and distribution": "-9,603",
+      "Research and development": "-10,434",
+      "General and administration": "-2,212",
+      "Operating profit": "12,690",
+      "Financing costs": "-936",
+      "Other financial income (expense)": "-27",
+      "Profit before taxes": "11,727",
+      "Income taxes": "-2,278",
+      "Net income": "9,449"
+    },
+    "Balance Sheet": {
+      "Total current assets": "27,613",
+      "Total non-current assets": "49,713",
+      "Total assets": "77,326",
+      "Total current liabilities": "23,639",
+      "Total non-current liabilities": "23,553",
+      "Total liabilities": "47,192",
+      "Total equity": "30,134"
+    },
+    "Cash Flow Statement": {
+      "Cash generated from operations": "18,766",
+      "Cash flows from operating activities": "15,769",
+      "Cash used in investing activities": "-4,616",
+      "Cash used in financing activities": "-12,340",
+      "Net effect of currency translation on cash": "-201",
+      "Increase (decrease) in cash": "-1,388",
+      "Cash and cash equivalents at end of year": "3,463"
+    }
+  },
+  "tokens_used": 140269
+}

@@ -1,0 +1,41 @@
+{
+  "Income Statement": {
+    "Revenue": "58,739",
+    "Cost of Goods Sold": "-20,897",
+    "Gross Profit": "37,842",
+    "Selling, General and Administrative Expenses": "-13,947",
+    "Research and Development Expenses": "-13,034",
+    "Operating Income": "10,861",
+    "Interest Expense": "-909",
+    "Other Income (Expense)": "194",
+    "Income Before Tax": "10,146",
+    "Income Tax Expense": "-1,857",
+    "Net Income": "8,289",
+    "Net Income Attributable to Shareholders": "7,648",
+    "Net Income Attributable to Non-controlling Interests": "641",
+    "Basic Earnings Per Share": "9.04",
+    "Diluted Earnings Per Share": "9.01"
+  },
+  "Balance Sheet": {
+    "Total Non-current Assets": "55,495",
+    "Total Current Assets": "38,616",
+    "Total Assets": "94,111",
+    "Equity Attributable to Shareholders": "24,510",
+    "Non-controlling Interests": "1,525",
+    "Total Equity": "26,035",
+    "Total Non-current Liabilities": "30,160",
+    "Total Current Liabilities": "37,916",
+    "Total Liabilities": "68,076",
+    "Total Equity and Liabilities": "94,111"
+  },
+  "Cash Flow Statement": {
+    "Net Cash Provided by Operating Activities": "17,475",
+    "Net Cash Used in Investing Activities": "-5,204",
+    "Net Cash Used in Financing Activities": "-11,393",
+    "Effect of Exchange Rate Changes on Cash": "-72",
+    "Net Increase in Cash": "806",
+    "Cash at Beginning of Year": "5,412",
+    "Cash at End of Year": "6,218",
+    "Free Cash Flow": "13,041"
+  }
+}

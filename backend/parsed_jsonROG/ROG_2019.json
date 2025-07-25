@@ -1,0 +1,51 @@
+{
+  "ticker": "ROG",
+  "year": 2019,
+  "name": "ROG",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Total net sales": "61,466",
+      "Research and development (R&D) costs": "11,738",
+      "Selling, general and administration (SG&A) costs": "18,329",
+      "Operating profit": "16,487",
+      "Net income": "14,106",
+      "Cost of sales": "34,979",
+      "Marketing and distribution": "11,426",
+      "General and administration": "4,550",
+      "Other operating income": "2,177",
+      "Other operating expense": "2,360"
+    },
+    "Balance Sheet": {
+      "Cash and cash equivalents": "5,345",
+      "Accounts receivable": "11,199",
+      "Inventories": "9,343",
+      "Total current assets": "32,948",
+      "Property, plant and equipment": "17,468",
+      "Goodwill": "8,734",
+      "Intangible assets": "10,685",
+      "Total non-current assets": "54,017",
+      "Total assets": "86,965",
+      "Accounts payable": "5,826",
+      "Other current liabilities": "13,318",
+      "Short-term debt": "1,157",
+      "Total current liabilities": "20,301",
+      "Long-term debt": "18,280",
+      "Total non-current liabilities": "28,065",
+      "Total liabilities": "48,366",
+      "Equity attributable to Roche shareholders": "38,089",
+      "Total equity": "38,599"
+    },
+    "Cash Flow Statement": {
+      "Cash flows from operating activities": "19,927",
+      "Cash flows from investing activities": "-7,104",
+      "Cash flows from financing activities": "-11,302",
+      "Net effect of currency translation on cash": "-93",
+      "Increase in cash and cash equivalents": "1,428",
+      "Cash and cash equivalents at beginning of year": "3,917",
+      "Cash and cash equivalents at end of year": "5,345",
+      "Purchase of property, plant and equipment": "-4,534"
+    }
+  },
+  "tokens_used": 156806
+}
