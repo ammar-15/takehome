@@ -41,7 +41,7 @@ export default function Home() {
   useEffect(() => {
     if (!activeTab) return;
 
-    fetch(`http://localhost:3001/api/company/${activeTab}`)
+    fetch(`https://takehome-backend.vercel.app/api/company/${activeTab}`)
       .then((res) => res.json())
       .then((res) => setFetchedData(res.data))
       .catch(() => setFetchedData(null));
