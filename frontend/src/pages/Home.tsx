@@ -36,7 +36,6 @@ export default function Home() {
     if (!activeTab) return;
 
     const url = `${import.meta.env.VITE_API_BASE_URL}/api/company/${activeTab}`;
-    console.log("Fetching:", url);
 
     fetch(url, {
       headers: {

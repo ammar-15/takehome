@@ -40,4 +40,24 @@ router.get("/:ticker", async (req, res) => {
   }
 });
 
+router.get("/:ticker/meta", async (req, res) => {
+  const { ticker } = req.params;
+
+  try {
+    const meta = await CompanyMetadata.findOne({ where: { ticker } });
+
+    if (!meta) {
+      return res
+        .status(404)
+        .json({ error: `Ticker ${ticker} not found in CompanyMetadata` });
+    }
+
+    return res.json(meta.toJSON());
+  } catch (err) {
+    console.error("Metadata fetch error:", err);
+    return res.status(500).json({ error: "Server error", details: err });
+  }
+});
+
+
 export default router;
