@@ -1,0 +1,38 @@
+{
+  "ticker": "AYDEN",
+  "year": 2017,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {},
+    "Balance Sheet": {
+      "Assets excluded from the numerator for GAR calculation": "3,878.90",
+      "Financial and Non-financial undertakings": "309.18",
+      "SMEs and NFCs (other than SMEs) not subject to CSRD disclosure obligations": "233.89",
+      "Non-EU country counterparties not subject to CSRD disclosure obligations": "75.29",
+      "Cash and cash-related assets": "2,915.21",
+      "Other categories of assets (e.g. Goodwill, commodities etc.)": "654.51",
+      "Assets not covered for GAR calculation": "7,187.22",
+      "Central governments and Supranational issuers": "137.40",
+      "Central banks exposure": "7,049.82",
+      "Total assets": "11,425.25",
+      "Financial guarantees": "138.43",
+      "EU-IFRS equity as reported in consolidated balance sheet": "3,150,867",
+      "Net profit not included in CET1 capital": "(416,149)",
+      "Warrant reserve": "(25,575)",
+      "Intangible assets": "(8,757)",
+      "Deferred tax assets that rely on future profitability": "(90,985)",
+      "Prudent valuation": "(16)",
+      "Total own funds": "2,609,385",
+      "Trade and other receivables": "649,086",
+      "Less: Allowance for expected credit losses": "12,836",
+      "Trade receivables - Net": "636,250",
+      "Receivables from Merchants and Financial Institutions": "446,577",
+      "Total": "6,269,058",
+      "Trade and other payables": "219,323",
+      "Payables to merchants and financial institutions": "6,049,735"
+    },
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 51656
+}

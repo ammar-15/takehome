@@ -1,0 +1,33 @@
+{
+  "ticker": "AYDEN",
+  "year": 2020,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Net interest revenue": "8,299"
+    },
+    "Balance Sheet": {
+      "Assets excluded from the numerator for GAR calculation": "3,878.90",
+      "Financial and Non-financial undertakings": "309.18",
+      "SMEs and NFCs (other than SMEs) not subject to CSRD disclosure obligations": "233.89",
+      "Non-EU country counterparties not subject to CSRD disclosure obligations": "75.29",
+      "Cash and cash-related assets": "2,915.21",
+      "Other categories of assets (e.g. Goodwill, commodities etc.)": "654.51",
+      "Assets not covered for GAR calculation": "7,187.22",
+      "Central governments and Supranational issuers": "137.40",
+      "Central banks exposure": "7,049.82",
+      "Total assets": "11,425.25",
+      "Financial guarantees": "138.43",
+      "Trade and other receivables": "428,628",
+      "Less: Allowance for expected credit losses": "(8,330)",
+      "Trade receivables - Net": "420,298",
+      "Receivables from Merchants and Financial Institutions": "361,834",
+      "Total": "5,532,635",
+      "Trade and other payables": "127,357",
+      "Payables to merchants and financial institutions": "5,405,278"
+    },
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 51629
+}

@@ -1,0 +1,14 @@
+{
+  "ticker": "AYDEN",
+  "year": 2023,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Net interest revenue": "8,299"
+    },
+    "Balance Sheet": {},
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 52497
+}

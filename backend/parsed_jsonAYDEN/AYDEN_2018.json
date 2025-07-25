@@ -1,0 +1,32 @@
+{
+  "ticker": "AYDEN",
+  "year": 2018,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {},
+    "Balance Sheet": {
+      "Assets excluded from the numerator for GAR calculation": "3,878.90",
+      "Financial and Non-financial undertakings": "309.18",
+      "SMEs and NFCs (other than SMEs) not subject to CSRD disclosure obligations": "233.89",
+      "Non-EU country counterparties not subject to CSRD disclosure obligations": "75.29",
+      "Cash and cash-related assets": "2,915.21",
+      "Other categories of assets (e.g. Goodwill, commodities etc.)": "654.51",
+      "Total GAR assets": "4,238.03",
+      "Assets not covered for GAR calculation": "7,187.22",
+      "Central governments and Supranational issuers": "137.40",
+      "Central banks exposure": "7,049.82",
+      "Total assets": "11,425.25",
+      "Financial guarantees": "138.43",
+      "EU-IFRS equity as reported in consolidated balance sheet": "4,231,524",
+      "Net profit not included in CET1 capital": "(515,549)",
+      "Warrant reserve": "(1,599)",
+      "Intangible assets": "(8,500)",
+      "Deferred tax assets that rely on future profitability": "(85,913)",
+      "Prudent valuation": "(13)",
+      "Total own funds": "3,619,950"
+    },
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 50030
+}

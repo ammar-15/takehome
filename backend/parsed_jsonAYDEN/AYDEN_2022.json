@@ -1,0 +1,26 @@
+{
+  "ticker": "AYDEN",
+  "year": 2022,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {
+      "Net interest revenue": "8,299"
+    },
+    "Balance Sheet": {
+      "EU-IFRS equity as reported in consolidated balance sheet": "4,231,524",
+      "Total own funds": "3,619,950",
+      "Cash held at central banks": "7,049,816",
+      "Cash held at banks, other than central banks": "2,915,214",
+      "Cash and cash equivalents": "5,863,231",
+      "Receivables from financial institutions": "292,091",
+      "Trade and other receivables": "428,628",
+      "Trade receivables - Net": "420,298",
+      "Receivables from Merchants and Financial Institutions": "361,834",
+      "Trade and other payables": "127,357",
+      "Payables to merchants and financial institutions": "5,405,278"
+    },
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 51155
+}

@@ -1,0 +1,28 @@
+{
+  "ticker": "AYDEN",
+  "year": 2015,
+  "name": "AYDEN",
+  "ir_url": "",
+  "data": {
+    "Income Statement": {},
+    "Balance Sheet": {
+      "Assets excluded from the numerator for GAR calculation": "3,878.90",
+      "Financial and Non-financial undertakings": "309.18",
+      "SMEs and NFCs (other than SMEs) not subject to CSRD disclosure obligations": "233.89",
+      "Loans and advances": "233.89",
+      "Non-EU country counterparties not subject to CSRD disclosure obligations": "75.29",
+      "Loans and advances (Non-EU country counterparties)": "65.80",
+      "Equity instruments (Non-EU country counterparties)": "9.49",
+      "Cash and cash-related assets": "2,915.21",
+      "Other categories of assets (e.g. Goodwill, commodities etc.)": "654.51",
+      "Total GAR assets": "4,238.03",
+      "Assets not covered for GAR calculation": "7,187.22",
+      "Central governments and Supranational issuers": "137.40",
+      "Central banks exposure": "7,049.82",
+      "Total assets": "11,425.25",
+      "Financial guarantees": "138.43"
+    },
+    "Cash Flow Statement": {}
+  },
+  "tokens_used": 49722
+}
