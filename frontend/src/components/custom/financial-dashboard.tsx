@@ -95,7 +95,6 @@ export default function FinancialDashboard({
   const [selectedMetric, setSelectedMetric] = useState<string>(
     dataMetricKeys[0] || ""
   );
-  const [hoveredPoint, setHoveredPoint] = useState<any>(null);
   const [open, setOpen] = useState(false);
 
   const currentData = groupedData[selectedMetric] || [];
@@ -217,10 +216,8 @@ export default function FinancialDashboard({
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 onMouseMove={(e) => {
                   if (e.activePayload && e.activePayload[0]) {
-                    setHoveredPoint(e.activePayload[0].payload);
                   }
                 }}
-                onMouseLeave={() => setHoveredPoint(null)}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                 <XAxis
