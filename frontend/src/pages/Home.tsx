@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import CompiledTable from "@/components/CompiledTable";
+import CompanyDataComponent from "@/components/CompanyDataComponent";
 import Navbar from "@/components/Navbar";
+import { useCompanyMeta, type CompanyTicker } from "@/api/companyApi";
 
 const DEFAULT_TABS = ["ASML", "AYDEN", "ROG"];
 const STORAGE_KEY_TABS = "dynamicTabs";
 const STORAGE_KEY_ACTIVE = "activeTab";
 
 export default function Home() {
-  const [fetchedData, setFetchedData] = useState<any[] | null>(null);
   const [tabs, setTabs] = useState<string[]>(() => {
     const storedTabs = JSON.parse(
       localStorage.getItem(STORAGE_KEY_TABS) || "null"
@@ -21,6 +21,8 @@ export default function Home() {
     return localStorage.getItem(STORAGE_KEY_ACTIVE) || "ASML";
   });
 
+  const { data } = useCompanyMeta(activeTab);
+
   useEffect(() => {
     const storedTabs = JSON.parse(
       localStorage.getItem(STORAGE_KEY_TABS) || "null"
@@ -32,39 +34,28 @@ export default function Home() {
     if (storedActive) setActiveTab(storedActive);
   }, []);
 
-  useEffect(() => {
-    if (!activeTab) return;
-
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/company/${activeTab}`;
-
-    fetch(url, {
-      headers: {
-        "ngrok-skip-browser-warning": "true",
-      },
-    })
-      .then((res) => {
-        console.log("Status:", res.status);
-        return res.json();
-      })
-      .then((res) => {
-        console.log("Response JSON:", res);
-        setFetchedData(res.data);
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        setFetchedData(null);
-      });
-  }, [activeTab]);
-
   return (
-    <div className="p-4">
-      <h1 className="text-4xl font-bold text-center mb-6">
-        Take Home Assignment by Ammar Faruqui
-      </h1>
+    <div className="p-4 mx-auto max-w-6xl">
+      <div className="flex justify-between">
+        <h1 className="text-4xl font-bold text-center mb-6">
+          Take Home Assignment by Ammar Faruqui
+        </h1>
+      </div>
       <Navbar tabs={tabs} activeTab={activeTab} onSelect={setActiveTab} />
 
       {tabs.includes(activeTab) && (
-        <CompiledTable ticker={activeTab} data={fetchedData} />
+        <div className="flex flex-col justify-start items-start">
+          <div className="flex flex-row items-start justify-between w-full p-2 bg-muted rounded-md">
+            {data?.name}
+            <div className="text-sm text-muted-foreground">
+              Source:{" "}
+              <a href={data?.ir_url} target="_blank" rel="noopener noreferrer">
+                {data?.ir_url}
+              </a>
+            </div>
+          </div>
+          <CompanyDataComponent ticker={activeTab as CompanyTicker} />
+        </div>
       )}
     </div>
   );
