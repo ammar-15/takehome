@@ -1,7 +1,10 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 
-const ChartTooltip = React.forwardRef(
+const ChartTooltip = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithRef<"div">
+>(
   ({ className, ...props }, ref) => {
     return (
       <div
