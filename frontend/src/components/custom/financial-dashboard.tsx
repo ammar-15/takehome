@@ -184,7 +184,9 @@ export default function FinancialDashboard({
                   </PopoverContent>
                 </Popover>
                 <Badge variant="secondary" className="text-xs">
-                  6-Year View
+                  {currentData.length > 0
+                    ? `${currentData.length}-Year View`
+                    : "No Data"}
                 </Badge>
               </div>
               <div className="flex items-center gap-4">
