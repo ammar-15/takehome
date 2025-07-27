@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CompanyDataComponent from "@/components/CompanyDataComponent";
 import Navbar from "@/components/Navbar";
 import { useCompanyMeta, type CompanyTicker } from "@/api/companyApi";
+import { TailwindBackground } from "@/components/ui/TailwindBackground";
 
 const DEFAULT_TABS = ["ASML", "AYDEN", "ROG"];
 const STORAGE_KEY_TABS = "dynamicTabs";
@@ -35,6 +36,9 @@ export default function Home() {
   }, []);
 
   return (
+    <>
+          <TailwindBackground />
+
     <div className="p-4 mx-auto max-w-6xl">
       <div className="flex justify-between">
         <h1 className="text-4xl font-bold text-center mb-6">
@@ -58,5 +62,6 @@ export default function Home() {
         </div>
       )}
     </div>
+    </>
   );
 }
