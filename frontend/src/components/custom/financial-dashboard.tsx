@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import AiOverviewBox from "@/components/custom/AiOverviewBox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +29,6 @@ import { TrendingUp, TrendingDown, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CompanyData } from "@/types";
 
-// Default metrics config
 type MetricsConfig = {
   [key: string]: { label: string; color: string; unit: string };
 };
@@ -59,45 +59,48 @@ const formatCompactCurrency = (value: number) => {
 
 type FinancialDashboardProps = {
   data: CompanyData[];
+  ticker: string;
   metrics?: MetricsConfig;
 };
 
 export default function FinancialDashboard({
   data,
+  ticker,
   metrics = defaultMetrics,
 }: FinancialDashboardProps) {
-  // Group data by metric and deduplicate by year
   const groupedData = data.reduce((acc, item) => {
     if (!acc[item.metric]) acc[item.metric] = [];
 
-    // Check if this year already exists for this metric
     const existingYearIndex = acc[item.metric].findIndex(
       (existing) => existing.year === item.year
     );
 
     if (existingYearIndex === -1) {
-      // Year doesn't exist, add the item
       acc[item.metric].push(item);
     }
-    // If year already exists, we skip this item (keep the first occurrence)
 
     return acc;
   }, {} as Record<string, CompanyData[]>);
 
-  // Sort each metric's data by year to ensure proper ordering
   Object.keys(groupedData).forEach((metric) => {
     groupedData[metric].sort((a, b) => a.year - b.year);
   });
 
-  // Get all unique metrics from the data
   const dataMetricKeys = Object.keys(groupedData);
-  // Use the first metric as default if available
   const [selectedMetric, setSelectedMetric] = useState<string>(
     dataMetricKeys[0] || ""
   );
   const [open, setOpen] = useState(false);
 
   const currentData = groupedData[selectedMetric] || [];
+  const scaledChartData = currentData.map((entry) => ({
+    ...entry,
+    value:
+      entry.value === 0 || entry.value === null || entry.value === undefined
+        ? null
+        : entry.value / 1_000_000,
+  }));
+  const fullRangeData = [...scaledChartData];
   const currentMetric = metrics[selectedMetric] || {
     label: selectedMetric,
     color: "#000",
@@ -212,7 +215,7 @@ export default function FinancialDashboard({
           <ChartContainer config={chartConfig} className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={currentData}
+                data={scaledChartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 onMouseMove={(e) => {
                   if (e.activePayload && e.activePayload[0]) {
@@ -224,8 +227,40 @@ export default function FinancialDashboard({
                   dataKey="year"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: "#64748b", fontSize: 12 }}
+                  tick={({ x, y, payload }) => {
+                    const year = payload.value;
+                    const point = scaledChartData.find((d) => d.year === year);
+                    const hasValue = point && point.value !== null;
+
+                    return (
+                      <g transform={`translate(${x},${y})`}>
+                        <text
+                          x={0}
+                          y={0}
+                          dy={16}
+                          textAnchor="middle"
+                          fill="#64748b"
+                          fontSize={12}
+                        >
+                          {year}
+                        </text>
+                        {!hasValue && (
+                          <text
+                            x={0}
+                            y={16}
+                            dy={16}
+                            textAnchor="middle"
+                            fill="#ef4444"
+                            fontSize={10}
+                          >
+                            No data
+                          </text>
+                        )}
+                      </g>
+                    );
+                  }}
                 />
+
                 <YAxis
                   axisLine={false}
                   tickLine={false}
@@ -235,7 +270,8 @@ export default function FinancialDashboard({
                 <ChartTooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
-                      const data = payload[0].payload;
+                      const data = payload?.[0]?.payload;
+                      if (!data) return null;
                       return (
                         <div className="bg-white p-4 border border-slate-200 rounded-lg shadow-lg">
                           <p className="font-semibold text-slate-900 mb-2">
@@ -245,7 +281,7 @@ export default function FinancialDashboard({
                             <p className="text-sm text-slate-600">
                               {currentMetric.label}:{" "}
                               <span className="font-semibold text-slate-900">
-                                {formatCurrency(data.value)}
+                                {formatCurrency(data.value)}M
                               </span>
                             </p>
                             {/* No growth property in CompanyData, so omit this */}
@@ -279,7 +315,6 @@ export default function FinancialDashboard({
               </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
-
           {/* Summary Stats */}
           <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
             <div className="text-center">
@@ -289,15 +324,36 @@ export default function FinancialDashboard({
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-slate-600 mb-1">6-Year Growth</p>
-              <p className="text-lg font-semibold text-emerald-600">
-                {currentData.length > 0 && latestValue
-                  ? `+${(
-                      ((latestValue.value - currentData[0].value) /
-                        currentData[0].value) *
-                      100
-                    ).toFixed(1)}%`
-                  : "-"}
+              <p className="text-sm text-slate-600 mb-1">
+                {fullRangeData.length}-Year Growth
+              </p>
+              <p
+                className={cn(
+                  "text-lg font-semibold",
+                  (() => {
+                    const start = fullRangeData[0]?.value;
+                    const end = fullRangeData[fullRangeData.length - 1]?.value;
+                    return start != null && end != null && start < end
+                      ? "text-emerald-600"
+                      : "text-red-600";
+                  })()
+                )}
+              >
+                {(() => {
+                  if (
+                    fullRangeData.length >= 2 &&
+                    fullRangeData[0]?.value != null &&
+                    fullRangeData[fullRangeData.length - 1]?.value != null
+                  ) {
+                    const startValue = fullRangeData[0].value!;
+                    const endValue =
+                      fullRangeData[fullRangeData.length - 1].value!;
+                    const growth = ((endValue - startValue) / startValue) * 100;
+                    return `${growth.toFixed(1)}%`;
+                  } else {
+                    return "-";
+                  }
+                })()}
               </p>
             </div>
             <div className="text-center">
@@ -317,6 +373,10 @@ export default function FinancialDashboard({
               </p>
             </div>
           </div>
+          <AiOverviewBox
+  ticker={ticker}
+  metric={`${currentData[0]?.statement_type}: ${currentData[0]?.metric}`}
+/>
         </CardContent>
       </Card>
     </div>

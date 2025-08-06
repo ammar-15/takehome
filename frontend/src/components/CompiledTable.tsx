@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -18,10 +19,8 @@ type CompiledTableProps = {
   data: any[] | null;
 };
 
-export default function CompiledTable({
-  data,
-}: CompiledTableProps) {
-  const [rows, setRows] = useState<Row[]>([]);
+export default function CompiledTable({ data }: CompiledTableProps) {
+  const [rows, setRows] = useState<{ section: string; rows: Row[] }[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
 
   useEffect(() => {
@@ -30,38 +29,53 @@ export default function CompiledTable({
     const filteredData = data.filter((d) => d.statement_type !== "Historical");
 
     const years = [...new Set(filteredData.map((d) => d.year))]
-      .sort()
+      .sort((a, b) => {
+        if (a === 2024) return -1;
+        if (b === 2024) return 1;
+        return b - a;
+      })
       .map(String);
-
-    const grouped: { [label: string]: { [year: string]: number | string } } = {};
-
-    for (const entry of filteredData) {
-      const label = `${entry.statement_type}: ${entry.metric}`;
-      if (!grouped[label]) grouped[label] = {};
-      grouped[label][entry.year] = entry.value;
-    }
 
     setColumns(years);
 
-    const nonEmptyRows = Object.entries(grouped)
-      .map(([label, valMap]) => {
-        const dataArray = years.map((y) => valMap[y] ?? "-");
+    const grouped: {
+      [statementType: string]: {
+        [metric: string]: { [year: string]: number | string };
+      };
+    } = {};
 
-        // Check if all values are empty, 0, "0", "-", or ""
-        const allEmpty = dataArray.every(
-          (val) =>
-            val === "-" ||
-            val === "" ||
-            val === 0 ||
-            val === "0" ||
-            val === null
-        );
+    for (const entry of filteredData) {
+      const { statement_type: statement, metric, year, value } = entry;
 
-        return allEmpty ? null : { label, data: dataArray };
-      })
-      .filter(Boolean) as Row[];
+      if (!grouped[statement]) grouped[statement] = {};
+      if (!grouped[statement][metric]) grouped[statement][metric] = {};
+      grouped[statement][metric][year] = value;
+    }
 
-    setRows(nonEmptyRows);
+    const sectionedRows: { section: string; rows: Row[] }[] = [];
+
+    for (const [statementType, metricsMap] of Object.entries(grouped)) {
+      const rowsInSection: Row[] = Object.entries(metricsMap)
+        .map(([metric, valMap]) => {
+          const dataArray = years.map((y) => {
+            const val = valMap[y];
+            return typeof val === "number" ? (val / 1_000_000).toFixed(2) : "-";
+          });
+
+          const allEmpty = dataArray.every(
+            (val) => val === "-" || val === "" || val === "0" || val === "0.00"
+          );
+
+          return allEmpty ? null : { label: metric, data: dataArray };
+        })
+        .filter(Boolean) as Row[];
+
+      if (rowsInSection.length > 0) {
+        sectionedRows.push({ section: statementType, rows: rowsInSection });
+      }
+    }
+
+    setRows(sectionedRows);
   }, [data]);
 
   return (
@@ -75,13 +89,25 @@ export default function CompiledTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((row, i) => (
-          <TableRow key={i}>
-            <TableCell>{row.label}</TableCell>
-            {row.data.map((val, j) => (
-              <TableCell key={j}>{val}</TableCell>
+        {rows.map((section, i) => (
+          <React.Fragment key={i}>
+            <TableRow>
+              <TableCell
+                colSpan={columns.length + 1}
+                className="font-bold text-slate-700 bg-slate-100"
+              >
+                {section.section}
+              </TableCell>
+            </TableRow>
+            {section.rows.map((row, j) => (
+              <TableRow key={j}>
+                <TableCell>{row.label}</TableCell>
+                {row.data.map((val, k) => (
+                  <TableCell key={k}>{val}</TableCell>
+                ))}
+              </TableRow>
             ))}
-          </TableRow>
+          </React.Fragment>
         ))}
       </TableBody>
     </Table>

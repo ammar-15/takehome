@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-export type CompanyTicker = 'ASML' | 'AYDEN' | 'ROG';
+export type CompanyTicker = string;
 
 interface CompanyData {
   data: any[];
@@ -12,7 +12,7 @@ interface CompanyMeta {
   ir_url: string;
 }
 
-const fetchCompanyData = async (ticker: CompanyTicker): Promise<CompanyData> => {
+const fetchCompanyData = async (ticker: string): Promise<CompanyData> => {
   const url = `${import.meta.env.VITE_API_BASE_URL}/api/company/${ticker}`;
   
   const response = await fetch(url, {
@@ -44,7 +44,7 @@ const fetchCompanyMeta = async (ticker: string): Promise<CompanyMeta> => {
   return response.json();
 };
 
-export const useCompanyData = (ticker: CompanyTicker) => {
+export const useCompanyData = (ticker: string) => {
   return useQuery({
     queryKey: ['company', ticker],
     queryFn: () => fetchCompanyData(ticker),
