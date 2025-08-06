@@ -21,7 +21,7 @@ export default function AnalysisPage() {
         </Button>
       </div>
       <Navbar
-        tabs={["ASML", "AYDEN", "ROG"]}
+        tabs={["ASML", "ADYEN", "ROG"]}
         activeTab={activeTab}
         onSelect={(tab) => setActiveTab(tab as CompanyTicker)}
       />

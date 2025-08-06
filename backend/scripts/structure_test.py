@@ -13,18 +13,63 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 # 💾 DB Setup
 DB_PATH = os.path.join(os.path.dirname(__file__), "../../data.sqlite")
 
-REFERENCE_METRICS_PATH = os.path.join(os.path.dirname(__file__), "../parsed_json/reference_keys_2024.json")
+REFERENCE_METRICS_PATH = os.path.join(os.path.dirname(__file__), "../parsed_jsonAYDEN2/reference_keys_2024.json")
+
+SELECTED_KEYS = {
+    "Income Statement": [
+        "Revenue", "Cost of Revenue", "Gross Profit", "Operating Expenses",
+        "Operating Income", "Net Income", "Interest Expense", "Other Income",
+        "Income Before Tax", "Net Income After Tax"
+    ],
+    "Balance Sheet": [
+        "Total Shareholder Equity", "Total Assets", "Total Liabilities",
+        "Cash and Cash Equivalents", "Short-Term Investments", "Long-Term Debt",
+        "Accounts Receivable", "Inventory", "Current Assets", "Non-Current Assets"
+    ],
+    "Cash Flow Statement": [
+        "Net Cash from Operating Activities", "Net Cash from Investing Activities",
+        "Net Cash from Financing Activities", "Capital Expenditures",
+        "Depreciation & Amortization", "Free Cash Flow", "Stock Buybacks",
+        "Dividends Paid", "Change in Working Capital", "Other Operating Cash Flow"
+    ]
+}
 
 
 def clean_value(value):
     """
-    Cleans and converts a financial value to a float.
-    Removes currency symbols and commas, handles non-numeric values.
+    Cleans and converts a financial value to raw float.
+    - Converts billion/million to raw number
+    - Removes non-numeric symbols
+    - Multiplies 5-digit or smaller numbers by 1,000
     """
-    try:
-        return float(str(value).replace(",", "").replace("$", "").replace("€", "").strip())
-    except ValueError:
+    if value is None:
         return None
+
+    raw = str(value).lower()
+
+    # Remove non-numeric symbols and brackets
+    raw = re.sub(r"[^\d.,\s\-a-z]", "", raw)
+    raw = raw.replace(",", "").replace("(", "").replace(")", "").replace("+", "").replace("-", "").strip()
+
+    multiplier = 1
+    if "billion" in raw:
+        multiplier = 1_000_000_000
+        raw = raw.replace("billion", "")
+    elif "million" in raw:
+        multiplier = 1_000_000
+        raw = raw.replace("million", "")
+    elif "thousand" in raw:
+        multiplier = 1_000
+        raw = raw.replace("thousand", "")
+
+    try:
+        num = float(raw.strip()) * multiplier
+        if abs(num) <= 99999:
+            num *= 1000
+        return round(num, 1)
+    except:
+        return None
+
 
 
 def ensure_tables(cursor):
@@ -57,7 +102,7 @@ def ensure_tables(cursor):
 
 
 # Where parsed JSONs live
-PARSED_JSON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../parsed_json"))
+PARSED_JSON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../parsed_jsonROG"))
 
 
 def load_all_json_files(folder_path: str):
@@ -250,6 +295,7 @@ def process_all():
         return
 
     # Pass 2: Process all other years
+        # Process all years (2023–2015) using OpenAI to extract 10 best metrics per section
     for path in files:
         if path.name == "reference_keys_2024.json" or "2024" in path.name:
             continue
@@ -264,9 +310,9 @@ def process_all():
             print(f"[⚠️ SKIPPED] {path.name} — missing required keys: {list(parsed.keys())}")
             continue
 
-        name = parsed.get("name", parsed["ticker"])
+        name = parsed.get("name", parsed.get("ticker", "ROG"))
+        ticker = "ROG"
         ir_url = parsed.get("ir_url", "")
-        ticker = parsed["ticker"]
         data = parsed["data"]
 
         try:
@@ -280,27 +326,80 @@ def process_all():
             if stype in ["Income Statement", "Balance Sheet", "Cash Flow Statement"]
         }
 
-        def match_metric(ref_metric: str, available_metrics: dict) -> str:
+        # 🧠 Use OpenAI to reduce to 10 useful rows per section
+        system_prompt = f"""You are a financial statement assistant.
+
+You will be given raw financial data with many line items under:
+- Income Statement
+- Balance Sheet
+- Cash Flow Statement
+
+Your task is to:
+1. Pick the 10 most important and informative metrics **for each section**.
+2. Discard irrelevant, redundant, or overly specific ones.
+3. Return exactly 3 objects: Income Statement, Balance Sheet, and Cash Flow Statement.
+
+Only output valid compact JSON like:
+{{
+  "Income Statement": {{ "Revenue": ..., "Net Income": ... }},
+  "Balance Sheet": {{ ... }},
+  "Cash Flow Statement": {{ ... }}
+}}
+
+Do not explain anything. Just valid JSON.
+"""
+
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps(canonical_data)}
+                ],
+                temperature=0.3,
+                max_tokens=1500,
+            )
+            raw = response.choices[0].message.content.strip()  # type: ignore
+            print(f"[🧠 OpenAI reduced {filing_year}]", path.name)
+            raw = raw.replace("```json", "").replace("```", "").strip()
+            deduped = json.loads(raw)
+        except Exception as e:
+            print(f"[❌ OpenAI error on {path.name}] {e}")
+            continue
+
+        # Construct Historical format
+        historical_data = {}
+        for stype in deduped:
+            for metric, val in deduped[stype].items():
+                historical_data.setdefault(metric, {})[str(filing_year)] = val
+
+        deduped["Historical Data"] = historical_data
+
+        # Save
+        safe_save_to_db(name, ticker, ir_url, filing_year, deduped)
+
+
+def match_metric(ref_metric: str, available_metrics: dict) -> str:
     """
     Finds the best matching metric from available metrics based on a reference metric.
     Uses difflib for fuzzy matching.
     """
-            keys = list(available_metrics.keys())
-            for k in keys:
-                if k.lower().strip() == ref_metric.lower().strip():
-                    return k
-            matches = difflib.get_close_matches(ref_metric, keys, n=1, cutoff=0.5)
-            return matches[0] if matches else ""
+    keys = list(available_metrics.keys())
+    for k in keys:
+        if k.lower().strip() == ref_metric.lower().strip():
+            return k
+    matches = difflib.get_close_matches(ref_metric, keys, n=1, cutoff=0.5)
+    return matches[0] if matches else ""
 
-        final_clean = {stype: {} for stype in reference_keys}
-        for stype in reference_keys:
-            if stype not in canonical_data:
-                continue
-            for ref_metric in reference_keys[stype]:
-                matched_key = match_metric(ref_metric, canonical_data[stype])
-                if matched_key:
-                    val = canonical_data[stype][matched_key]
-                    final_clean[stype][ref_metric] = val
+    final_clean = {stype: {} for stype in reference_keys}
+    for stype in reference_keys:
+        if stype not in canonical_data:
+            continue
+        for ref_metric in reference_keys[stype]:
+            matched_key = match_metric(ref_metric, canonical_data[stype])
+            if matched_key:
+                val = canonical_data[stype][matched_key]
+                final_clean[stype][ref_metric] = val
 
         historical_data = {}
         for stype in final_clean:

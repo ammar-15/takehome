@@ -5,7 +5,7 @@ import { useCompanyData } from "@/api/companyApi";
 import Navbar from "@/components/Navbar";
 import { useCompanyMeta, type CompanyTicker } from "@/api/companyApi";
 import { TailwindBackground } from "@/components/ui/TailwindBackground";
-const DEFAULT_TABS = ["ASML", "AYDEN", "ROG"];
+const DEFAULT_TABS = ["ASML", "ADYEN", "ROG"];
 const STORAGE_KEY_TABS = "dynamicTabs";
 const STORAGE_KEY_ACTIVE = "activeTab";
 
