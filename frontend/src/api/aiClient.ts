@@ -13,6 +13,8 @@ const generateAISummary = async (
   data: CompanyDataRow[]
 ): Promise<string> => {
   const [statementType, metricLabel] = metric.split(":").map((s) => s.trim());
+  console.log("Statement Type:", statementType);
+
 
   const rows = [...data].sort((a, b) => a.year - b.year);
 
